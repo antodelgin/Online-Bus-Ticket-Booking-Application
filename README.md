@@ -1,6 +1,6 @@
 # Online Bus Ticket Booking Application
 
-Bus Ticket Booking System is a Spring Boot application that allows users to book bus tickets easily. It includes features like secure authentication using JWT, role-based access control, and efficient booking management with Spring Boot, Spring Security, Thymeleaf, and MySQL.
+Online Bus Ticket Booking Application is a Spring Boot application that allows users to book bus tickets easily. It includes features like secure authentication using JWT, role-based access control, and efficient booking management with Spring Boot, Spring Security, Thymeleaf, and MySQL.
 
 ## Technologies Used
 

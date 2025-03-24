@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Bus List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+<div th:replace="~{fragments :: header}"></div>
+
+<main class="container mt-4 flex-grow-1 pb-5">
+    <h2 class="text-center text-primary mb-4">Available Buses</h2>
+
+    <form th:action="@{/buses/search}" method="get" class="row g-3 mb-4 align-items-center">
+        <div class="col-md-3">
+            <input type="text" name="source" class="form-control" placeholder="Source" required>
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="destination" class="form-control" placeholder="Destination" required>
+        </div>
+        <div class="col-md-3">
+            <input type="date" name="date" class="form-control" required>
+        </div>
+        <div class="col-md-3 d-flex ">
+            <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </form>
+
+    <div class="d-flex justify-content-start mb-3">
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/buses/add}" class="btn btn-success">
+            <i class="fas fa-plus-circle me-2"></i> Add New Bus
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark text-center">
+            <tr>
+                <th>Bus Number</th>
+                <th>Bus Name</th>
+                <th>Source</th>
+                <th>Destination</th>
+                <th>Departure Time</th>
+                <th>Reaching Time</th>
+                <th>Duration (hrs)</th>
+                <th>Available Seats</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="bus : ${buses}">
+                <td th:text="${bus.busNumber}"></td>
+                <td th:text="${bus.busName}"></td>
+                <td th:text="${bus.source}"></td>
+                <td th:text="${bus.destination}"></td>
+                <td th:text="${bus.departureTime}"></td>
+                <td th:text="${bus.departureTime.plusHours(bus.duration)}"></td>
+                <td th:text="${bus.duration}"></td>
+                <td class="fw-bold text-success" th:text="${bus.availableSeats}"></td>
+                <td class="fw-bold text-primary">₹<span th:text="${bus.price}"></span></td>
+
+                <td class="text-center">
+                    <div class="d-flex justify-content-center gap-2">
+                        <a th:href="@{/buses/{id}(id=${bus.id})}" class="btn btn-info btn-sm">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                        <a sec:authorize="hasRole('ADMIN')" th:href="@{/buses/update/{id}(id=${bus.id})}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Update
+                        </a>
+                        <a th:href="@{/bookings/new/{busId}(busId=${bus.id})}" class="btn btn-success btn-sm">
+                            <i class="fas fa-ticket-alt"></i> Book Now
+                        </a>
+                    </div>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:if="${#lists.isEmpty(buses)}" class="text-center mt-3">
+        <h5 class="text-danger">No buses found.</h5>
+    </div>
+</main>
+
+<div th:replace="~{fragments :: footer}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
